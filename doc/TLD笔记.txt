@@ -1,6 +1,6 @@
 tldGenerateFeatures(nTREES, nFEAT, show)
 ��Ӧ����ensemble classifier??????(�µ�)������show��Ϊ1�Ϳ��Կ������Ǹ�����������
 Ϊʲô�������εģ�
-我们这里的人‘
+我们这里的人
 
 
