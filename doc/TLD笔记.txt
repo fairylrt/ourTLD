@@ -1,6 +1,3 @@
 tldGenerateFeatures(nTREES, nFEAT, show)
-��Ӧ����ensemble classifier??????(�µ�)������show��Ϊ1�Ϳ��Կ������Ǹ�����������
-Ϊʲô�������εģ�
-我们这里的人
-
-
+对应的应该是ensemmble classifier??????（我猜的）把show值设为1可以显示？
+但是无论你一开始的框是什么样子的，他这个一定是正方形。不知道为什么
