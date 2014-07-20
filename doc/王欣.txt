@@ -1,1 +1,7 @@
-TLD detection.m
+TLDdetection.m 笔记
+1. 
+function [BB Conf tld] = tldDetection(tld,I)
+% scanns the image(I) with a sliding window, returns a list of bounding
+% boxes and their confidences that match the object description
+
+Comment：变量tld相当于一个全局变量，在C++可以通过传地址，指针等代替
