@@ -2,4 +2,5 @@ tldGenerateFeatures(nTREES, nFEAT, show)
 对应的应该是ensemmble classifier??????（我猜的）把show值设为1可以显示？
 但是无论你一开始的框是什么样子的，他这个一定是正方形。不知道为什么
 
-终于好了。。。
+我知道为什么正方形了
+因为无论什么样子的框，都要变换成正方形来进行判断。
