@@ -4,3 +4,35 @@
 
 我知道为什么正方形了
 因为无论什么样子的框，都要变换成正方形来进行判断。
+
+function [BB2 Conf Valid tld] = tldTracking(tld,BB1,I,J)
+BB2是要求的框，conf是置信度
+valid不知道，tld参数
+
+BB1之前的框，I=J-1
+
+怎么判断valid
+
+bb_points得到bb中的grid点，然后对这些点做track，得到fb error和 ncc
+XFI每一列都是点，XFJ是每一列是点，FB,NCC
+
+XFI前两行和XFJ为什么不一样。
+
+median2就是median(isnan是什么情况啊！！！怎么改到c++里。)
+
+
+xFJ好像是新的frame里面对应的点。
+
+getpattern:
+先获得patch(就是框出来的那一部分)
+然后获得pattern(),pattern就是把patch变成patchsize大小。。然后减去均值。。
+
+与正样本比较ncc
+预付样本算ncc
+distance是normalized correlation。
+
+conf1是盒所有的（ncc）
+conf2是和前百分之五(conservative)
+Conservative Similarity是前百分之五十
+
+
