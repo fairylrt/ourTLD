@@ -7,9 +7,11 @@ public:
 	Size imgsize;
 	struct Model{
 		Size patchsize;
-		float thr_nn_valid
+		float thr_nn_valid;
+		float ncc_thesame;
+		float valid;
 	} model;
 	vector<int> valid;
-	vector<Mat> pex;
-	vector<Mat> nex;
+	Mat pex;
+	Mat nex;
 };
