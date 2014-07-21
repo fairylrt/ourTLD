@@ -1,6 +1,15 @@
 #include"common.h"
 class Config{
 public:
-	vector<Rect> bb;
-
-}
+	Mat bb;
+	vector<Mat> img;//img[I]表示这个点的图。
+	Mat xFJ;
+	Size imgsize;
+	struct Model{
+		Size patchsize;
+		float thr_nn_valid
+	} model;
+	vector<int> valid;
+	vector<Mat> pex;
+	vector<Mat> nex;
+};

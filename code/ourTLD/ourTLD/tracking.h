@@ -1,6 +1,9 @@
 #include"common.h"
 #include"bbox.h"
 #include"Config.h"
+#include"lk.h"
+#include<math.h>
+
 namespace TLD{
-	void tldTracking(Rect &BB2,float &Conf,int Valid,Config TLD,Rect BB1,int I,int J);
+	void tldTracking(Mat &BB2,float &Conf,int Valid,Config TLD,Mat BB1,int I,int J);
 }
