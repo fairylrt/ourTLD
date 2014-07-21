@@ -1,3 +1,5 @@
+
+
 TLDdetection.m 笔记
 1. 
 function [BB Conf tld] = tldDetection(tld,I)
@@ -9,7 +11,7 @@ Comment：变量tld相当于一个全局变量，在C++可以通过传地址，�
 2.
 程序中的数据结构：
 1） run_TLD中先定义了opt, 可以把opt定义为一个类， 包含了opt.source(相当于一个字典, tldInitSource里面赋予初值,这个地方
-要读取鼠标点击，)，
+要读取鼠标点击，这里用的是matlab的获取句柄， 返回的是选择框四个顶点的坐标值)，
 opt.output, 
 opt.model(包含了模型参数：min_win(目标的最小size,会影响到运行速度)， pathsize(15*15), fliplr(是否镜像)，
 {ncc_thesame, valid,num_trees,num_features,thr_fern, thr_nn,thr_nn_valid}是一系列数值参数)
@@ -20,4 +22,17 @@ opt.control: {maxbbox(fraction of evaluated bounding boxes in every frame, maxbo
 update_detector( online learning on/off, of 0 detector is trained only in the first frame and then remains fixed),
 dropImg, repeat} opt.control 里的数字取值在0-1之间
 
-整个程序的输入数据就是opt, tld定义的是全局变量
+整个程序的输入数据就是opt, tld定义的是全局变量， 在tldInt.m里面对tld进行初始化，lk(0）不晓得是干嘛的。。。
+看到void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])， 看起来应该是调用这个了，不过程序的入口在
+哪里啊。。
+
+哦哦哦，我发现了，是mexFunction解决的， 在matlab中写对应的cpp文件名当成是函数名，然后matlab会到对应的cpp下面去找mexFunction
+作为程序入口。。
+
+
+
+在tldInt.m里面，就相当于是把tld定义为opt类的实例，然后对之前类里面的的那些struct进行初始化，在matlab里面就是cell array, 
+就是那种可以类型混用的数组。有点要注意的是tld.handle,这个是在有了鼠标输入之后才获取的句柄，opt里面是没有的，所以在把tld赋给
+opt之后就要再把handle也赋值一下。。感觉可以在定义opt类的时候就把这一项加上去。
+
+
