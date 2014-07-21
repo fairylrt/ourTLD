@@ -5,3 +5,19 @@ function [BB Conf tld] = tldDetection(tld,I)
 % boxes and their confidences that match the object description
 
 Comment：变量tld相当于一个全局变量，在C++可以通过传地址，指针等代替
+
+2.
+程序中的数据结构：
+1） run_TLD中先定义了opt, 可以把opt定义为一个类， 包含了opt.source(相当于一个字典, tldInitSource里面赋予初值,这个地方
+要读取鼠标点击，)，
+opt.output, 
+opt.model(包含了模型参数：min_win(目标的最小size,会影响到运行速度)， pathsize(15*15), fliplr(是否镜像)，
+{ncc_thesame, valid,num_trees,num_features,thr_fern, thr_nn,thr_nn_valid}是一系列数值参数)
+{opt.p_par_init, opt.p_par_update} 分析初始化阶段和更新阶段的positive examples. 
+opt.n_par: negative examples iniitiaization/update
+opt.tracker: "occlusion", 10 ???? 没理解是干嘛的。。。
+opt.control: {maxbbox(fraction of evaluated bounding boxes in every frame, maxbox = 0 means detector is truned off,不怕慢就设1)
+update_detector( online learning on/off, of 0 detector is trained only in the first frame and then remains fixed),
+dropImg, repeat} opt.control 里的数字取值在0-1之间
+
+整个程序的输入数据就是opt, tld定义的是全局变量
