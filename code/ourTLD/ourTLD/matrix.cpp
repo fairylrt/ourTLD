@@ -1,7 +1,13 @@
 #include"matrix.h"
 namespace TLD{
+	float isnan(float x){
+		return _isnan(x);
+		if (x==std::numeric_limits<float>::quiet_NaN())
+			return true;
+		return false;
+	}
 	float median(Mat m){
-		vector<float> temp=m;
+		vector<float> temp(m);
 		float ans=0;
 		if (temp.size() %2==1){
 			int pos=temp.size()/2;
@@ -21,30 +27,53 @@ namespace TLD{
 		}
 	}
 	float median2(Mat m){
-		return median(m);
+		vector<float> temp;
+		for(int i=0;i<m.rows;i++)
+		{
+			float tt=m.at<float>(i);
+			if (!isnan(m.at<float>(i)))
+				temp.push_back(m.at<float>(i));
+		}
+		float ans=0;
+		if (temp.size() %2==1){
+			int pos=temp.size()/2;
+			nth_element(temp.begin(),temp.begin()+pos,temp.end());
+			ans=temp[pos];
+			temp.clear();
+			return ans;
+		}
+		else{
+			int pos=temp.size()/2;
+			nth_element(temp.begin(),temp.begin()+pos-1,temp.end());
+			ans=temp[pos-1];
+			nth_element(temp.begin(),temp.begin()+pos,temp.end());
+			ans=(ans+temp[pos])/2;
+			temp.clear();
+			return ans;
+		}
 	}
 	Mat filterByValue(Mat x,float value,string type){
-		Mat y=x.clone();
+		Mat y(x.rows,x.cols,CV_8U);
 		if (type=="<="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)<=value)
-					y.at<float>(i)=1;
+			for(int i=0;i<x.rows;i++)
+				if (isnan(x.at<float>(i))||x.at<float>(i)>value)
+					y.at<uchar>(i)=0;
 				else
-					y.at<float>(i)=0;
+					y.at<uchar>(i)=1;
 		}
 		else if (type==">="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)>=value)
-					y.at<float>(i)=1;
+			for(int i=0;i<x.rows;i++)
+				if (isnan(x.at<float>(i))||x.at<float>(i)<value)
+					y.at<uchar>(i)=0;
 				else
-					y.at<float>(i)=0;
+					y.at<uchar>(i)=1;
 		} 
 		else if (type=="=="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)==value)
-					y.at<float>(i)=1;
+			for(int i=0;i<x.rows;i++)
+				if (isnan(x.at<float>(i))||x.at<float>(i)!=value)
+					y.at<uchar>(i)=0;
 				else
-					y.at<float>(i)=0;
+					y.at<uchar>(i)=1;
 		}
 		return y;
 	}
@@ -135,11 +164,9 @@ namespace TLD{
 	}
 
 	Mat selectByBool(Mat x,Mat b){
-		if (b.cols!=1)
-			b=b.reshape(0,b.cols);
-		Mat ans;
+		Mat ans(0,x.cols,CV_32F);
 		for(int i=0;i<x.rows;i++){
-			if (b.at<float>(i)==1)
+			if (b.at<uchar>(i)==1)
 				ans.push_back(x.row(i));
 		}
 		return ans;
@@ -149,6 +176,14 @@ namespace TLD{
 		for(int i=0;i<x.rows;i++){
 			for(int j=0;j<x.cols;j++)
 				printf("%6.3f ",x.at<float>(i,j));
+			printf("\n");
+		}
+	}
+
+	void printMatUchar(Mat x){
+		for(int i=0;i<x.rows;i++){
+			for(int j=0;j<x.cols;j++)
+				printf("%d ",x.at<uchar>(i,j));
 			printf("\n");
 		}
 	}

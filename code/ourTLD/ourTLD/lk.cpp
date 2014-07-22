@@ -77,7 +77,7 @@ namespace TLD{
 		float nan = std::numeric_limits<float>::quiet_NaN();
 		float inf = std::numeric_limits<float>::infinity();
 	
-		if (mode==1){
+		if (mode==2){
 			if (IMG == 0 ) {
 					printf("lk(2,imgI,imgJ,ptsI,ptsJ,Level)\n");
 				//            0 1    2    3    4   

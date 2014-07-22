@@ -91,10 +91,10 @@ namespace TLD{
 		// estimate BB2
 		Mat xFI = TLD::bb_points(BB1,10,10,5); // generate 10x10 grid of points within BB1 with margin 5 px
 		Mat xFJ = lk(2,tld.img[I],tld.img[J],xFI,xFI);// track all points by Lucas-Kanade tracker from frame I to frame J, estimate Forward-Backward error, and NCC for each point
-		float medFB  = median2(xFJ.col(3)); // get median of Forward-Backward error
-		float medNCC = median2(xFJ.col(4)); // get median for NCC
-		Mat idxF   = filterByValue(xFJ.col(3),medFB,"<=")*filterByValue(xFJ.col(4),medNCC,">="); // get indexes of reliable points
-		BB2 = bb_predict(BB1,selectByBool(xFI,idxF),selectByBool(xFJ.colRange(1,3),idxF)); // estimate BB2 using the reliable points only
+		float medFB  = median2(xFJ.col(2)); // get median of Forward-Backward error
+		float medNCC = median2(xFJ.col(3)); // get median for NCC
+		Mat idxF   = filterByValue(xFJ.col(2),medFB,"<=")*filterByValue(xFJ.col(3),medNCC,">="); // get indexes of reliable points
+		BB2 = bb_predict(BB1,selectByBool(xFI,idxF),selectByBool(xFJ.colRange(0,2),idxF)); // estimate BB2 using the reliable points only
 
 		tld.xFJ = selectByBool(xFJ,idxF);//save selected points (only for display purposes)
 
@@ -143,10 +143,10 @@ namespace TLD{
 			vector<float> nccN=TLD::distance(x.row(i),tld.nex,1);//measure NCC to negative examples
 
 			if (anyLarger(nccP,tld.model.ncc_thesame))//
-				isin.at<uint>(i,1)=1;//IF the query patch is highly correlated with any positive patch in the model THEN it is considered to be one of them
-			isin.at<unsigned int>(i,2)=maxIndex(nccP);// get the index of the maximall correlated positive patch
+				isin.at<uchar>(i,1)=1;//IF the query patch is highly correlated with any positive patch in the model THEN it is considered to be one of them
+			isin.at<uchar>(i,2)=maxIndex(nccP);// get the index of the maximall correlated positive patch
 			if (anyLarger(nccN,tld.model.ncc_thesame))
-				isin.at<unsigned int>(i,3)=1;//IF the query patch is highly correlated with any negative patch in the model THEN it is considered to be one of them
+				isin.at<uchar>(i,3)=1;//IF the query patch is highly correlated with any negative patch in the model THEN it is considered to be one of them
 
 			// measure Relative Similarity
 			float dN = 1 - maxValue(nccN);

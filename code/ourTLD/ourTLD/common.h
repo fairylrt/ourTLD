@@ -9,6 +9,7 @@
 #include<iostream>
 #include<stdio.h>
 #include<math.h>
+#include<limits>
 #define uint unsigned int
 using namespace cv;
 using namespace std;

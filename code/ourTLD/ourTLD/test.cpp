@@ -14,6 +14,20 @@ int main(){
 
 	//printMat(x);
 
+	lk(0);
+
+	float temp3[4]={109,46,242,192};
+	Mat BB1(1,4,CV_32F,temp3);
+
+	Mat xFI = TLD::bb_points(BB1,10,10,5); // generate 10x10 grid of points within BB1 with margin 5 px
+	//printMat(xFI);
+	Mat xFJ = lk(2,imread("img1.png",0),imread("img2.png",0),xFI,xFI);
+	float medFB  = median2(xFJ.col(2)); // get median of Forward-Backward error
+	float medNCC = median2(xFJ.col(3)); // get median for NCC
+	Mat idxF   = filterByValue(xFJ.col(2),medFB,"<=").mul(filterByValue(xFJ.col(3),medNCC,">=")); // get indexes of reliable points
+	printMatUchar(idxF);
+	Mat	BB2 = bb_predict(BB1,selectByBool(xFI,idxF),selectByBool(xFJ.colRange(0,2),idxF)); // estimate BB2 using the reliable points only
+
 	system("pause");
 	return 0;
 }

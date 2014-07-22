@@ -22,5 +22,6 @@ namespace TLD{
 	Mat selectByBool(Mat x,Mat b);
 
 	void printMat(Mat x);
+	void printMatUchar(Mat x);
 }
 #endif 
