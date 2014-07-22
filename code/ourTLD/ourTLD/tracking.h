@@ -2,6 +2,7 @@
 #include"bbox.h"
 #include"Config.h"
 #include"lk.h"
+#include"matrix.h"
 #include<math.h>
 
 namespace TLD{

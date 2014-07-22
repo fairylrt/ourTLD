@@ -1,56 +1,5 @@
 #include"tracking.h"
 namespace TLD{
-	float median2(Mat m){
-		vector<float> temp=m;
-		float ans=0;
-		if (temp.size() %2==1){
-			int pos=temp.size()/2;
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
-			ans=temp[pos];
-			temp.clear();
-			return ans;
-		}
-		else{
-			int pos=temp.size()/2;
-			nth_element(temp[0],temp[pos-1],temp[temp.size()-1]);
-			ans=temp[pos-1];
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
-			ans=(ans+temp[pos])/2;
-			temp.clear();
-			return ans;
-		}
-	}
-	Range filterByValue(Mat xFJ3,float medFB,Mat xFJ4,float medNCC){
-		return Range();
-	}
-
-	bool anyLarger(vector<float> x,float thr){
-		for(int i=0;i<x.size();i++)
-			if (x[i]>thr)
-				return true;
-		return false;
-	}
-
-	int maxIndex(vector<float> x){
-		int ans=0;
-		float max=x[0];
-		for(int i=1;i<x.size();i++)
-			if (x[i]>max){
-				max=x[i];
-				ans=i;
-			}
-		return ans;
-	}
-
-	float maxValue(vector<float> x){
-		float max=x[0];
-		for(int i=1;i<x.size();i++)
-			if (x[i]>max){
-				max=x[i];
-			}
-		return max;
-	}
-
 	#define nextrow(tmp, width, height) ((tmp)+width)
 	#define nextcol(tmp, width, height) ((tmp)+1)
 	#define nextr_c(tmp, width, height) ((tmp)+width+1)
@@ -181,32 +130,7 @@ void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I
 		return Mat();
 	}
 
-	Mat norm(Mat m){
-		vector<float> x(m.rows);
-		for(int i=0;i<m.rows;i++){
-			x[i]=0;
-			for(int j=0;j<m.cols;j++){
-				x[i]+=m.at<float>(i,j)*m.at<float>(i,j);
-			}
-			x[i]=sqrt(x[i]);
-		}
-		Mat ans(x);
-		//Guarantee to be a row
-		if (ans.cols==1)
-			ans=ans.t();
-		x.clear();
-		return ans;
-	}
-
-	Mat distance(Mat x,Mat ex,int type){
-		Mat dst;
-		gemm(ex,x.t(),1,Mat(x.t()),0,dst);
-		Mat x1=norm(x);
-		Mat x2=norm(ex);
-		dst/=x1.at<float>(0);
-		dst/=x2;
-		return dst;
-	}
+	
 
 	void tldNN(vector<float> &conf1,vector<float> &conf2,Mat x,Config tld){
 		Mat isin(x.rows,3,CV_32F,-1);
