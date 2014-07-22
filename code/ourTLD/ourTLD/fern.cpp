@@ -1,12 +1,4 @@
-#include "math.h"
-#include"common.h"
-#include "stdio.h"
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-#include <map>
-#include <set>
-#include "tld.h"
+#include "fern.h"
 
 
 static double thrN;
@@ -30,6 +22,7 @@ static int nBIT = 1; // number of bits per feature
 
 #define sub2idx(row,col,height) ((int) (floor((row)+0.5) + floor((col)+0.5)*(height)))
 
+namespace TLD{
 void update(double *x, int C, int N) {
 	for (int i = 0; i < nTREES; i++) {
 
@@ -68,6 +61,10 @@ int measure_tree_offset(unsigned char *img, int idx_bbox, int idx_tree) {
 	}
 	return index;	
 }
+
+double bbox_var_offset(double *IIMG,double* IIMG2,int* pos){
+		return 0;
+	}
 
 
 double measure_bbox_offset(unsigned char *blur, int idx_bbox, double minVar, double *tPatt) {
@@ -320,6 +317,8 @@ vector<double> fern(int mode, Mat XX, Mat YY, float thr_fern, int bootstrap, Mat
 		output.push_back(measure_forest(X+nTREES*i));
 	}
 	return output;
+}
+
 }
 
 

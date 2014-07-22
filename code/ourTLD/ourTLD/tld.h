@@ -6,5 +6,7 @@
 #include"tracking.h"
 #include"matrix.h"
 #include"lk.h"
+#include"fern.h"
+#include"detecting.h"
 using namespace TLD;
 #endif

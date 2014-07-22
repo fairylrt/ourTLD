@@ -10,7 +10,11 @@
 #include<stdio.h>
 #include<math.h>
 #include<limits>
-#define uint unsigned int
+#include <time.h>
+#include <map>
+#include <set>
+
+
 using namespace cv;
 using namespace std;
 #endif

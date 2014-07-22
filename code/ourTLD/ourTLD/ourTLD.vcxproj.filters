@@ -36,6 +36,12 @@
     <ClInclude Include="lk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="detecting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fern.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp">
@@ -57,6 +63,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="detecting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="fern.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

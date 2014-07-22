@@ -1,3 +1,5 @@
+#ifndef _BBOX_H
+#define _BBOX_H
 #include"common.h"
 #include"Config.h"
 #include"bbox.h"
@@ -111,3 +113,4 @@ namespace TLD{
 			||(bb.at<float>(3)<1);
 	}
 }
+#endif

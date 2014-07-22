@@ -1,13 +1,5 @@
 #include"matrix.h"
 namespace TLD{
-<<<<<<< HEAD
-	float median(Mat m){
-		vector<float> temp=m;
-		float ans=0;
-		if (temp.size() %2==1){
-			int pos=temp.size()/2;
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
-=======
 	float isnan(float x){
 		return _isnan(x);
 		if (x==std::numeric_limits<float>::quiet_NaN())
@@ -22,54 +14,21 @@ namespace TLD{
 		if (temp.size() %2==1){
 			int pos=temp.size()/2;
 			nth_element(temp.begin(),temp.begin()+pos,temp.end());
->>>>>>> origin/lrt
 			ans=temp[pos];
 			temp.clear();
 			return ans;
 		}
 		else{
 			int pos=temp.size()/2;
-<<<<<<< HEAD
-			nth_element(temp[0],temp[pos-1],temp[temp.size()-1]);
-			ans=temp[pos-1];
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
-=======
 			nth_element(temp.begin(),temp.begin()+pos-1,temp.end());
 			ans=temp[pos-1];
 			nth_element(temp.begin(),temp.begin()+pos,temp.end());
->>>>>>> origin/lrt
 			ans=(ans+temp[pos])/2;
 			temp.clear();
 			return ans;
 		}
 	}
 	float median2(Mat m){
-<<<<<<< HEAD
-		return median(m);
-	}
-	Mat filterByValue(Mat x,float value,string type){
-		Mat y=x.clone();
-		if (type=="<="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)<=value)
-					y.at<float>(i)=1;
-				else
-					y.at<float>(i)=0;
-		}
-		else if (type==">="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)>=value)
-					y.at<float>(i)=1;
-				else
-					y.at<float>(i)=0;
-		} 
-		else if (type=="=="){
-			for(int i=0;i<x.cols;i++)
-				if (y.at<float>(i)==value)
-					y.at<float>(i)=1;
-				else
-					y.at<float>(i)=0;
-=======
 		vector<float> temp;
 		for(int i=0;i<m.rows;i++)
 		{
@@ -117,7 +76,6 @@ namespace TLD{
 					y.at<uchar>(i)=0;
 				else
 					y.at<uchar>(i)=1;
->>>>>>> origin/lrt
 		}
 		return y;
 	}
@@ -152,33 +110,19 @@ namespace TLD{
 	Mat ntuples(Mat m1,Mat m2){
 		Mat t1=m1.reshape(0,1);
 		Mat t2=m2.reshape(0,1);
-<<<<<<< HEAD
-		Mat ans(Size(t1.rows*t2.rows,2),CV_32F);
-		int width=t2.rows;
-		for(int i=0;i<t1.rows;i++)
-			for(int j=0;j<t2.rows;j++){
-				ans.at<float>(i*width+j,0)=t1.at<float>(i);
-				ans.at<float>(i*width+j,1)=t1.at<float>(j);
-=======
 		Mat ans(t1.cols*t2.cols,2,CV_32F);
 		int width=t2.cols;
 		for(int i=0;i<t1.cols;i++)
 			for(int j=0;j<t2.cols;j++){
 				ans.at<float>(i*width+j,0)=t1.at<float>(i);
 				ans.at<float>(i*width+j,1)=t2.at<float>(j);
->>>>>>> origin/lrt
 			}
 		return ans;
 	}
 
 	Mat generateMatByStep(float x,float step,float y){
-<<<<<<< HEAD
-		int n=floor((y-x)/step);
-		Mat ans(Size(1,n),CV_32F);
-=======
 		int n=floor((y-x)/step)+1;
 		Mat ans(1,n,CV_32F);
->>>>>>> origin/lrt
 		for(int i=0;i<ans.cols;i++){
 			ans.at<float>(i)=x+step*i;
 		}
@@ -222,23 +166,15 @@ namespace TLD{
 	}
 
 	Mat selectByBool(Mat x,Mat b){
-<<<<<<< HEAD
-		if (b.cols!=1)
-			b=b.reshape(0,b.cols);
-		Mat ans;
-		for(int i=0;i<x.rows;i++){
-			if (b.at<float>(i)==1)
-=======
 		Mat ans(0,x.cols,CV_32F);
 		for(int i=0;i<x.rows;i++){
 			if (b.at<uchar>(i)==1)
->>>>>>> origin/lrt
 				ans.push_back(x.row(i));
 		}
 		return ans;
 	}
-<<<<<<< HEAD
-	vector<int> find_index(,vector<float> conf, float thr, int type){
+
+	vector<int> find_index(vector<float> conf, float thr, int type){
 		vector<int> idx_dt;
 		if(type==1){ 
 			for(int i=0;i<conf.size();++i){
@@ -248,17 +184,14 @@ namespace TLD{
 			}
 		}
 		else if(type==0){
-			for(int i=0;i<conf.size;++i){
+			for(int i=0;i<conf.size();++i){
 				if(conf[i]<thr){
 					idx_dt.push_back(i);
 				}
 			}
 		}
+		return idx_dt;
 	}
-	return idx_dt;
-
-}
-=======
 
 	void printMat(Mat x){
 		for(int i=0;i<x.rows;i++){
@@ -303,4 +236,3 @@ namespace TLD{
 
 
 }
->>>>>>> origin/lrt

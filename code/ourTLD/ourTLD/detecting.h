@@ -1,7 +1,10 @@
+#ifndef _DETECTING_H
+#define _DETECTING_H
 #include"common.h"
 #include"bbox.h"
 #include"Config.h"
 #include"matrix.h"
+#include"fern.h"
 
 namespace TLD{
 	struct DT{
@@ -14,6 +17,6 @@ namespace TLD{
 		vector<float> patt;
 	};
 	void tldDetecting(vector<Mat> &dBB2, vector<float> &Conf, Config tld, int I);
-
 	
 }
+#endif

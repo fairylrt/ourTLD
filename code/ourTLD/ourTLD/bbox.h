@@ -13,6 +13,7 @@ namespace TLD{
 	float bb_height(Mat bb);//tested~
 	bool bb_isdef(Mat BB2);
 	bool bb_isout(Mat BB2,Size imgsize);
+
 }
 
 #endif
