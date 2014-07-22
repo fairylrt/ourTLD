@@ -74,53 +74,53 @@ namespace TLD{
 		float xmin=box.at<float>(0),ymin=box.at<float>(1),xmax=box.at<float>(2),ymax=box.at<float>(3);
 
 		float fill=0;
-		Mat result(Size((xmax-xmin+1),(int)(ymax-ymin+1)),CV_32F);
+		Mat result((xmax-xmin+1),(int)(ymax-ymin+1),CV_32F);
 		warp_image_roi(img,w,h,H,xmin,xmax,ymin,ymax,fill,result);
 
 		return result;
 	}
 
-//Estimates motion of bounding box BB1 from frame I to frame J
-void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I,int J){
-	//initialize output variables
-	BB2=Mat();// estimated bounding
-	Conf=vector<float>(); // confidence of prediction
-	Valid  = 0;  // is the predicted bounding box valid? if yes, learning will take place ...
+	//Estimates motion of bounding box BB1 from frame I to frame J
+	void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I,int J){
+		//initialize output variables
+		BB2=Mat();// estimated bounding
+		Conf=vector<float>(); // confidence of prediction
+		Valid  = 0;  // is the predicted bounding box valid? if yes, learning will take place ...
 
 
-	// estimate BB2
-	Mat xFI = TLD::bb_points(BB1,10,10,5); // generate 10x10 grid of points within BB1 with margin 5 px
-	Mat xFJ = lk(2,tld.img[I],tld.img[J],xFI,xFI);// track all points by Lucas-Kanade tracker from frame I to frame J, estimate Forward-Backward error, and NCC for each point
-	float medFB  = median2(xFJ.col(3)); // get median of Forward-Backward error
-	float medNCC = median2(xFJ.col(4)); // get median for NCC
-	Range idxF   = filterByValue(xFJ.col(3),medFB,xFJ.col(4),medNCC); // get indexes of reliable points
-	BB2 = bb_predict(BB1,xFI.rowRange(idxF),xFJ.colRange(1,2).rowRange(idxF)); // estimate BB2 using the reliable points only
+		// estimate BB2
+		Mat xFI = TLD::bb_points(BB1,10,10,5); // generate 10x10 grid of points within BB1 with margin 5 px
+		Mat xFJ = lk(2,tld.img[I],tld.img[J],xFI,xFI);// track all points by Lucas-Kanade tracker from frame I to frame J, estimate Forward-Backward error, and NCC for each point
+		float medFB  = median2(xFJ.col(3)); // get median of Forward-Backward error
+		float medNCC = median2(xFJ.col(4)); // get median for NCC
+		Mat idxF   = filterByValue(xFJ.col(3),medFB,"<=")*filterByValue(xFJ.col(4),medNCC,">="); // get indexes of reliable points
+		BB2 = bb_predict(BB1,selectByBool(xFI,idxF),selectByBool(xFJ.colRange(1,3),idxF)); // estimate BB2 using the reliable points only
 
-	tld.xFJ = xFJ.rowRange(idxF);//save selected points (only for display purposes)
+		tld.xFJ = selectByBool(xFJ,idxF);//save selected points (only for display purposes)
 
-	// detect failures
-	if (!bb_isdef(BB2) || bb_isout(BB2,tld.imgsize)){
-		BB2 = Mat(); return;// bounding box out of image
-	}
+		// detect failures
+		if (!bb_isdef(BB2) || bb_isout(BB2,tld.imgsize)){
+			BB2 = Mat(); return;// bounding box out of image
+		}
 
-	//问题
-	//if tld.control.maxbbox > 0 && medFB > 10, BB2 = []; return; end  % too unstable predictions
+		//问题
+		//if tld.control.maxbbox > 0 && medFB > 10, BB2 = []; return; end  % too unstable predictions
 
 	
-	// estimate confidence and validity
-	Mat patchJ   = tldGetPattern(tld.img[J],BB2,tld.model.patchsize); // sample patch in current image
-	vector<float> t_Conf;
-	tldNN(t_Conf,Conf,patchJ,tld); // estimate its Conservative Similarity (considering 50% of positive patches only)
+		// estimate confidence and validity
+		Mat patchJ   = tldGetPattern(tld.img[J],BB2,tld.model.patchsize); // sample patch in current image
+		vector<float> t_Conf;
+		tldNN(t_Conf,Conf,patchJ,tld); // estimate its Conservative Similarity (considering 50% of positive patches only)
 
-	// Validity
-	Valid = tld.valid[I]; // copy validity from previous frame
-	if (Conf[0] > tld.model.thr_nn_valid)
-		Valid = 1; // tracker is inside the 'core'
-}
+		// Validity
+		Valid = tld.valid[I]; // copy validity from previous frame
+		if (Conf[0] > tld.model.thr_nn_valid)
+			Valid = 1; // tracker is inside the 'core'
+	}
 
-	Mat tldGetPattern(Mat img,Mat bb,Size patchsize,bool flip=0){
+	Mat tldGetPattern(Mat img,Mat bb,Size patchsize,bool flip){
 		int nBB=bb.rows;
-		Mat pattern=Mat::zeros(Size(nBB,patchsize.height*patchsize.width),CV_32F);
+		Mat pattern=Mat::zeros(nBB,patchsize.height*patchsize.width,CV_32F);
 		for (int i=0;i<nBB;i++){
 			Mat patch=img_patch(img,bb.row(i));
 			if (flip)
@@ -133,7 +133,7 @@ void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I
 	
 
 	void tldNN(vector<float> &conf1,vector<float> &conf2,Mat x,Config tld){
-		Mat isin(x.rows,3,CV_32F,-1);
+		Mat isin(x.rows,3,CV_8U,-1);
 		conf1.clear();
 		conf2.clear();
 		conf1=vector<float>(x.rows);
@@ -143,10 +143,10 @@ void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I
 			vector<float> nccN=TLD::distance(x.row(i),tld.nex,1);//measure NCC to negative examples
 
 			if (anyLarger(nccP,tld.model.ncc_thesame))//
-				isin.at<float>(i,1)=1;//IF the query patch is highly correlated with any positive patch in the model THEN it is considered to be one of them
-			isin.at<float>(i,2)=maxIndex(nccP);// get the index of the maximall correlated positive patch
+				isin.at<uint>(i,1)=1;//IF the query patch is highly correlated with any positive patch in the model THEN it is considered to be one of them
+			isin.at<unsigned int>(i,2)=maxIndex(nccP);// get the index of the maximall correlated positive patch
 			if (anyLarger(nccN,tld.model.ncc_thesame))
-				isin.at<float>(i,3)=1;//IF the query patch is highly correlated with any negative patch in the model THEN it is considered to be one of them
+				isin.at<unsigned int>(i,3)=1;//IF the query patch is highly correlated with any negative patch in the model THEN it is considered to be one of them
 
 			// measure Relative Similarity
 			float dN = 1 - maxValue(nccN);
@@ -161,9 +161,9 @@ void tldTracking(Mat &BB2,vector<float> &Conf,int Valid,Config tld,Mat BB1,int I
 		}
 		
 	}
-	Mat img_patch(Mat img, Mat bb, float randomize=0,float p_par=0){
+	Mat img_patch(Mat img, Mat bb){
 		//All coordinates are integers
-		Mat cp(Size(1,2),CV_32F);
+		Mat cp(1,2,CV_32F);
 		cp.at<float>(0)=(bb.at<float>(0)+bb.at<float>(2))/2-1;
 		cp.at<float>(1)=(bb.at<float>(1)+bb.at<float>(3))/2-1;
 		

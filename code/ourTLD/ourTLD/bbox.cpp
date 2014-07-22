@@ -5,7 +5,7 @@
 #define max(a,b) a<b?b:a
 #define min(a,b) a<b?a:b
 namespace TLD{
-	Mat bb_burn(Mat img, Mat bb_in, int width=0){
+	void bb_burn(Mat img, Mat bb_in, int width){
 		for (int i=0;i<bb_in.rows;i++){
 			Mat bb=bb_in.row(i);
 			bb.at<float>(0)=max(1,bb.at<float>(0));
@@ -18,24 +18,24 @@ namespace TLD{
 			int bb2=(int)bb.at<float>(2);
 			int bb3=(int)bb.at<float>(3);
 
-			img.rowRange(bb1,bb1+width).colRange(bb0,bb2)=255;
-			img.rowRange(bb3-width,bb3).colRange(bb0,bb2)=255;
-			img.rowRange(bb1,bb3).colRange(bb0,bb0+width)=255;
-			img.rowRange(bb1,bb3).colRange(bb2-width,bb2)=255;
+			img.rowRange(bb1,bb1+width+1).colRange(bb0,bb2+1)=255;
+			img.rowRange(bb3-width,bb3+1).colRange(bb0,bb2+1)=255;
+			img.rowRange(bb1,bb3+1).colRange(bb0,bb0+width+1)=255;
+			img.rowRange(bb1,bb3+1).colRange(bb2-width,bb2+1)=255;
 		}
 	}//ok~ bb是整数矩阵怎么办？
 	Mat bb_center(Mat bb){
-		Mat cp(Size(1,2),CV_32F);
-		cp.at<float>(0)=(bb.at<float>(0)+bb.at<float>(2))/2;
-		cp.at<float>(1)=(bb.at<float>(1)+bb.at<float>(3))/2;
+		Mat cp(bb.rows,2,CV_32F);
+		cp.col(0)=(bb.col(0)+bb.col(2))/2;
+		cp.col(1)=(bb.col(1)+bb.col(3))/2;
 		return cp;
-	}//ok  bb是整数矩阵怎么办？
+	}//tested~ok~
 
-	//Mat是'一'个框！
+	//bb是'一'个框！
 	Mat bb_points(Mat bb,int numM,int numN,float margin){
 		//Generates numM x numN points on BBox.
-		bb.colRange(0,1)+=margin;
-		bb.colRange(2,3)-=margin;
+		bb.colRange(0,2)+=margin;
+		bb.colRange(2,4)-=margin;
 
 		if (numM==1 && numN==1)
 			return bb_center(bb);
@@ -74,6 +74,24 @@ namespace TLD{
 		Mat ans(1,4,CV_32F,temp);
 		float temp2[2]={s1,s2};
 		shift=Mat(1,2,CV_32F,temp2);
+		return ans;
+	}
+	Mat bb_predict(Mat BB0,Mat pt0,Mat pt1){
+		Mat of=pt1-pt0;
+		float dx=median(of.col(0));
+		float dy=median(of.col(1));
+
+		Mat d1=pdist(pt0);
+		Mat d2=pdist(pt1);
+		float s=median(d2/d1);
+
+		float s1=0.5*(s-1)*bb_width(BB0);
+		float s2=0.5*(s-1)*bb_height(BB0);
+
+		float temp[4]={BB0.at<float>(0)-s1+dx,BB0.at<float>(1)-s2+dy,BB0.at<float>(2)+s1+dx,BB0.at<float>(3)+s2+dy};
+		Mat ans(1,4,CV_32F,temp);
+		float temp2[2]={s1,s2};
+		//shift=Mat(1,2,CV_32F,temp2);
 		return ans;
 	}
 	float bb_width(Mat bb){

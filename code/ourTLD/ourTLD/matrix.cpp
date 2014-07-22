@@ -5,16 +5,16 @@ namespace TLD{
 		float ans=0;
 		if (temp.size() %2==1){
 			int pos=temp.size()/2;
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
+			nth_element(temp.begin(),temp.begin()+pos,temp.end());
 			ans=temp[pos];
 			temp.clear();
 			return ans;
 		}
 		else{
 			int pos=temp.size()/2;
-			nth_element(temp[0],temp[pos-1],temp[temp.size()-1]);
+			nth_element(temp.begin(),temp.begin()+pos-1,temp.end());
 			ans=temp[pos-1];
-			nth_element(temp[0],temp[pos],temp[temp.size()-1]);
+			nth_element(temp.begin(),temp.begin()+pos,temp.end());
 			ans=(ans+temp[pos])/2;
 			temp.clear();
 			return ans;
@@ -79,19 +79,19 @@ namespace TLD{
 	Mat ntuples(Mat m1,Mat m2){
 		Mat t1=m1.reshape(0,1);
 		Mat t2=m2.reshape(0,1);
-		Mat ans(Size(t1.rows*t2.rows,2),CV_32F);
-		int width=t2.rows;
-		for(int i=0;i<t1.rows;i++)
-			for(int j=0;j<t2.rows;j++){
+		Mat ans(t1.cols*t2.cols,2,CV_32F);
+		int width=t2.cols;
+		for(int i=0;i<t1.cols;i++)
+			for(int j=0;j<t2.cols;j++){
 				ans.at<float>(i*width+j,0)=t1.at<float>(i);
-				ans.at<float>(i*width+j,1)=t1.at<float>(j);
+				ans.at<float>(i*width+j,1)=t2.at<float>(j);
 			}
 		return ans;
 	}
 
 	Mat generateMatByStep(float x,float step,float y){
-		int n=floor((y-x)/step);
-		Mat ans(Size(1,n),CV_32F);
+		int n=floor((y-x)/step)+1;
+		Mat ans(1,n,CV_32F);
 		for(int i=0;i<ans.cols;i++){
 			ans.at<float>(i)=x+step*i;
 		}
@@ -143,5 +143,13 @@ namespace TLD{
 				ans.push_back(x.row(i));
 		}
 		return ans;
+	}
+
+	void printMat(Mat x){
+		for(int i=0;i<x.rows;i++){
+			for(int j=0;j<x.cols;j++)
+				printf("%6.3f ",x.at<float>(i,j));
+			printf("\n");
+		}
 	}
 }

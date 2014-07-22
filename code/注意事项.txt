@@ -5,3 +5,5 @@ opencv按行处理
 
 
 坐标从零开始！
+
+colRange和rowRange(i,j)，是从第i到第j-1

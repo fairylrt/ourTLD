@@ -1,3 +1,5 @@
+#ifndef _CONFIG_H
+#define _CONFIG_H
 #include"common.h"
 class Config{
 public:
@@ -15,3 +17,4 @@ public:
 	Mat pex;
 	Mat nex;
 };
+#endif
