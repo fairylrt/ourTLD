@@ -7,7 +7,7 @@
 namespace TLD{
 	void bb_burn(Mat img, Mat bb_in, int width){
 		for (int i=0;i<bb_in.rows;i++){
-			Mat bb=bb_in.row(i);
+			Mat bb=bb_in.row(i).clone();
 			bb.at<float>(0)=max(1,bb.at<float>(0));
 			bb.at<float>(1)=max(1,bb.at<float>(1));
 			bb.at<float>(2)=min(img.cols,bb.at<float>(2));
@@ -18,10 +18,10 @@ namespace TLD{
 			int bb2=(int)bb.at<float>(2);
 			int bb3=(int)bb.at<float>(3);
 
-			img.rowRange(bb1,bb1+width+1).colRange(bb0,bb2+1)=255;
-			img.rowRange(bb3-width,bb3+1).colRange(bb0,bb2+1)=255;
-			img.rowRange(bb1,bb3+1).colRange(bb0,bb0+width+1)=255;
-			img.rowRange(bb1,bb3+1).colRange(bb2-width,bb2+1)=255;
+			img.rowRange(bb1-1,bb1+width).colRange(bb0-1,bb2)=255;
+			img.rowRange(bb3-width-1,bb3).colRange(bb0-1,bb2)=255;
+			img.rowRange(bb1-1,bb3).colRange(bb0-1,bb0+width)=255;
+			img.rowRange(bb1-1,bb3).colRange(bb2-width-1,bb2)=255;
 		}
 	}//ok~ bb是整数矩阵怎么办？
 	Mat bb_center(Mat bb){
@@ -32,8 +32,9 @@ namespace TLD{
 	}//tested~ok~
 
 	//bb是'一'个框！
-	Mat bb_points(Mat bb,int numM,int numN,float margin){
+	Mat bb_points(Mat bb1,int numM,int numN,float margin){
 		//Generates numM x numN points on BBox.
+		Mat bb=bb1.clone();
 		bb.colRange(0,2)+=margin;
 		bb.colRange(2,4)-=margin;
 
@@ -54,7 +55,7 @@ namespace TLD{
 
 		float stepW=(bb.at<float>(2)-bb.at<float>(0))/(numN-1);
 		float stepH=(bb.at<float>(3)-bb.at<float>(1))/(numM-1);
-		return ntuples(generateMatByStep(bb.at<float>(0),stepW,bb.at<float>(2)),generateMatByStep(bb.at<float>(1),stepH,bb.at<float>(3)));
+		return ntuples(generateMatByStep(bb.at<float>(0),stepW,bb.at<float>(2)),generateMatByStep(bb.at<float>(1),stepH,bb.at<float>(3))).clone();
 	}
 
 	//BB0是一维的。草！
@@ -73,8 +74,8 @@ namespace TLD{
 		float temp[4]={BB0.at<float>(0)-s1+dx,BB0.at<float>(1)-s2+dy,BB0.at<float>(2)+s1+dx,BB0.at<float>(3)+s2+dy};
 		Mat ans(1,4,CV_32F,temp);
 		float temp2[2]={s1,s2};
-		shift=Mat(1,2,CV_32F,temp2);
-		return ans;
+		shift=Mat(1,2,CV_32F,temp2,1);
+		return ans.clone();
 	}
 	Mat bb_predict(Mat BB0,Mat pt0,Mat pt1){
 		Mat of=pt1-pt0;
@@ -90,9 +91,9 @@ namespace TLD{
 
 		float temp[4]={BB0.at<float>(0)-s1+dx,BB0.at<float>(1)-s2+dy,BB0.at<float>(2)+s1+dx,BB0.at<float>(3)+s2+dy};
 		Mat ans(1,4,CV_32F,temp);
-		float temp2[2]={s1,s2};
+		//float temp2[2]={s1,s2};
 		//shift=Mat(1,2,CV_32F,temp2);
-		return ans;
+		return ans.clone();
 	}
 	float bb_width(Mat bb){
 		return bb.at<float>(2)-bb.at<float>(0)+1;
@@ -103,7 +104,10 @@ namespace TLD{
 	bool bb_isdef(Mat BB2){
 		return !BB2.empty();
 	}
-	bool bb_isout(Mat BB2,Size imgsize){
-		return false;
+	bool bb_isout(Mat bb,Size imsize){
+		return (bb.at<float>(0)>imsize.height)
+			||(bb.at<float>(1)>imsize.width)
+			||(bb.at<float>(2)<1)
+			||(bb.at<float>(3)<1);
 	}
 }

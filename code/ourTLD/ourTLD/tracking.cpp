@@ -13,8 +13,12 @@ namespace TLD{
 	{
 	   double curx, cury, curz, wx, wy, wz, ox, oy, oz;
 	   int x, y;
-	   unsigned char *tmp;
-	   float *output= (float*)(result.data);
+	   //unsigned char *tmp;
+	   float *output;
+	   if (result.isContinuous())
+		 output = (float*)(result.data);
+	   else
+		   return;
 	   double i, j, xx, yy;
 	   /* precalulate necessary constant with respect to i,j offset 
 		  translation, H is column oriented (transposed) */   
@@ -40,25 +44,33 @@ namespace TLD{
 	//       printf("%g %g, %g %g %g\n", xx, yy, wx, wy, wz);
 			 wx /= wz; wy /= wz;
 			 xx = xx + 1;
-         
-			 x = (int)floor(wx);
-			 y = (int)floor(wy);
+				
+			x = (int)floor(wx);
+			y = (int)floor(wy);
 
+
+			//careful x is column number, y is row number
 			 if (x>=0 && y>=0)
 			 {
+
 				wx -= x; wy -= y; 
 				if (x+1==w && wx==1)
 				   x--;
 				if (y+1==h && wy==1)
 				   y--;
+
+
 				if ((x+1)<w && (y+1)<h)
 				{
-				   tmp = image.data+x*w+y;
+				   //uchar tmp = image.at<uchar>(x,y);
 				   /* image[x,y]*(1-wx)*(1-wy) + image[x+1,y]*wx*(1-wy) +
 					  image[x,y+1]*(1-wx)*wy + image[x+1,y+1]*wx*wy */
 				   *output++ = 
-					  (*(tmp) * (1-wx) + *nextcol(tmp, w, h) * wx) * (1-wy) +
-					  (*nextrow(tmp,w,h) * (1-wx) + *nextr_c(tmp,w,h) * wx) * wy;
+					  (image.at<uchar>(y,x) * (1-wx) + image.at<uchar>(y,x+1) * wx) * (1-wy) +
+					  (image.at<uchar>(y+1,x) * (1-wx) + image.at<uchar>(y+1,x+1) * wx) * wy;
+				
+				
+				
 				} else 
 				   *output++ = fill;
 			 } else 
@@ -71,13 +83,13 @@ namespace TLD{
 		int w=img.cols;
 		int h=img.rows;
 		
-		float xmin=box.at<float>(0),ymin=box.at<float>(1),xmax=box.at<float>(2),ymax=box.at<float>(3);
+		float xmin=box.at<float>(0),xmax=box.at<float>(1),ymin=box.at<float>(2),ymax=box.at<float>(3);
 
 		float fill=0;
-		Mat result((xmax-xmin+1),(int)(ymax-ymin+1),CV_32F);
+		Mat result((int)(ymax-ymin+1),(int)(xmax-xmin+1),CV_32F);
 		warp_image_roi(img,w,h,H,xmin,xmax,ymin,ymax,fill,result);
 
-		return result;
+		return result.clone();
 	}
 
 	//Estimates motion of bounding box BB1 from frame I to frame J
@@ -120,14 +132,16 @@ namespace TLD{
 
 	Mat tldGetPattern(Mat img,Mat bb,Size patchsize,bool flip){
 		int nBB=bb.rows;
-		Mat pattern=Mat::zeros(nBB,patchsize.height*patchsize.width,CV_32F);
+		Mat pattern=Mat(0,patchsize.height*patchsize.width,CV_32F);
 		for (int i=0;i<nBB;i++){
 			Mat patch=img_patch(img,bb.row(i));
+			imshow("result",patch);
 			if (flip)
 				patch=Mat();//fliplr
-			pattern.row(i) = tldPatch2Pattern(patch,patchsize);
+			pattern.push_back(tldPatch2Pattern(patch,patchsize));
+			printMat(pattern);
 		}
-		return Mat();
+		return pattern;
 	}
 
 	
@@ -161,46 +175,66 @@ namespace TLD{
 		}
 		
 	}
+	
+	#define max(a,b) a<b?b:a
+	#define min(a,b) a<b?a:b
 	Mat img_patch(Mat img, Mat bb){
 		//All coordinates are integers
-		Mat cp(1,2,CV_32F);
-		cp.at<float>(0)=(bb.at<float>(0)+bb.at<float>(2))/2-1;
-		cp.at<float>(1)=(bb.at<float>(1)+bb.at<float>(3))/2-1;
-		
-		float data[3][3]={{1,0,-cp.at<float>(0)},{0,1,-cp.at<float>(1)},{0,0,1}};
-		Mat H(3,3,CV_32F,data);
-		
-		float bbW=bb.at<float>(2)-bb.at<float>(0);
-		float bbH=bb.at<float>(3)-bb.at<float>(1);
-		if (bbW<=0||bbH<=0)
-			return Mat();
 
-		float data1[4]={-bbW/2,bbW/2,-bbH/2,bbH/2};
-		Mat box(1,4,CV_32F,data1);
+		if (norm(bb-roundToFloat(bb),NORM_L1)<0.001)
+		{
+			int L=max(1,(int)bb.at<float>(0));
+			int T=max(1,(int)bb.at<float>(1));
+			int R=min(img.cols,(int)bb.at<float>(2));
+			int B=min(img.rows,(int)bb.at<float>(3));
 
-		Mat patch;
-		H=H.inv();
-		if (img.channels()==3){
-			vector<Mat> channels;
-			split(img,channels);
-			for(int i=0;i<3;i++){
-				channels[i]=warp(channels[i],H,box);
-				//uint8(channels[i]);
-			}
-			merge(channels,patch);
+			Mat patch=img.rowRange(T-1,B).colRange(L-1,R);
+			return patch;
 		}
 		else{
-			patch=warp(img,H,box);
-			//patch=(int)patch;
+			Mat cp(1,2,CV_32F);
+			cp.at<float>(0)=(bb.at<float>(0)+bb.at<float>(2))/2-1;
+			cp.at<float>(1)=(bb.at<float>(1)+bb.at<float>(3))/2-1;
+		
+			float data[3][3]={{1,0,-cp.at<float>(0)},{0,1,-cp.at<float>(1)},{0,0,1}};
+			Mat H(3,3,CV_32F,data);
+		
+			float bbW=bb.at<float>(2)-bb.at<float>(0);
+			float bbH=bb.at<float>(3)-bb.at<float>(1);
+			if (bbW<=0||bbH<=0)
+				return Mat();
+
+			float data1[4]={-bbW/2,bbW/2,-bbH/2,bbH/2};
+			Mat box(1,4,CV_32F,data1);
+
+			Mat patch;
+			H=H.inv();
+			if (img.channels()==3){
+				vector<Mat> channels;
+				split(img,channels);
+				for(int i=0;i<3;i++){
+					channels[i]=warp(channels[i],H,box);
+					//uint8(channels[i]);
+				}
+				merge(channels,patch);
+			}
+			else{
+				patch=warp(img,H,box);
+				//patch=(int)patch;
+			}
+			return roundToUchar(patch);
 		}
-		return patch;
 	}
 
 	Mat tldPatch2Pattern(Mat patch,Size patchsize){
-		resize(patch,patch,patchsize); // 'bilinear' is faster
-		//patch.convertTo(patch,CV_32F);
-		Mat pattern = patch.reshape(1,1);
+		//printMatUchar(patch);
+		resize(patch,patch,patchsize,0,0,CV_INTER_LINEAR); // 'bilinear' is faster
+		//printMatUchar(patch);
+		//imshow("hagha",patch);
+		//waitKey(0);
+		Mat pattern = ucharToFloat(patch.reshape(1,1));
 		pattern = pattern - mean(pattern);
-		return pattern;
+		//printMat(pattern);
+		return pattern.clone();
 	}
 }

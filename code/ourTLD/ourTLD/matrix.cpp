@@ -7,7 +7,9 @@ namespace TLD{
 		return false;
 	}
 	float median(Mat m){
-		vector<float> temp(m);
+		vector<float> temp;
+		for(int i=0;i<m.rows;i++)
+			temp.push_back(m.at<float>(i));
 		float ans=0;
 		if (temp.size() %2==1){
 			int pos=temp.size()/2;
@@ -187,4 +189,31 @@ namespace TLD{
 			printf("\n");
 		}
 	}
+
+
+	Mat roundToUchar(Mat m){
+		Mat ans(m.rows,m.cols,CV_8U);
+		for(int i=0;i<m.rows;i++)
+			for(int j=0;j<m.cols;j++)
+				ans.at<uchar>(i,j)=(int)floor(m.at<float>(i,j)+0.5);
+		return ans.clone();
+	}
+
+	Mat roundToFloat(Mat m){
+		Mat ans(m.rows,m.cols,CV_32F);
+		for(int i=0;i<m.rows;i++)
+			for(int j=0;j<m.cols;j++)
+				ans.at<float>(i,j)=floor(m.at<float>(i,j)+0.5);
+		return ans.clone();
+	}
+	
+	Mat ucharToFloat(Mat m){
+		Mat ans(m.rows,m.cols,CV_32F);
+		for(int i=0;i<m.rows;i++)
+			for(int j=0;j<m.cols;j++)
+				ans.at<float>(i,j)=(float)m.at<uchar>(i,j);
+		return ans.clone();
+	}
+
+
 }
