@@ -1,4 +1,18 @@
+#ifndef _BBOX_H
+#define _BBOX_H
+
 #include"common.h"
-namespace tld{
-	vector<Point2d> bb_points(Rect bb,int numM,int numN,float margin);
+#include"matrix.h"
+namespace TLD{
+	void bb_burn(Mat img, Mat bb_in, int width=0);
+	Mat bb_center(Mat bb);//tested
+	Mat bb_points(Mat bb,int numM,int numN,float margin);//tested
+	Mat bb_predict(Mat BB0,Mat pt0,Mat pt1,Mat shift);//tested~
+	Mat bb_predict(Mat BB0,Mat pt0,Mat pt1);//tested~
+	float bb_width(Mat bb);//tested~
+	float bb_height(Mat bb);//tested~
+	bool bb_isdef(Mat BB2);
+	bool bb_isout(Mat BB2,Size imgsize);
 }
+
+#endif
