@@ -1,0 +1,106 @@
+﻿生成启动时间为 2014/7/23 10:16:32。
+     1>项目“C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\cTLD\cTLD.vcxproj”在节点 2 上(build 个目标)。
+     1>PrepareForBuild:
+         正在创建目录“C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\”。
+       InitializeBuildStatus:
+         正在创建“Release\cTLD.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt FerNNClassifier.cpp LKTracker.cpp run_tld.cpp TLD.cpp tld_utils.cpp
+         FerNNClassifier.cpp
+     1>FerNNClassifier.cpp(37): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(38): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>FerNNClassifier.cpp(39): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>FerNNClassifier.cpp(40): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>FerNNClassifier.cpp(41): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>FerNNClassifier.cpp(47): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>FerNNClassifier.cpp(51): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+     1>FerNNClassifier.cpp(52): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+     1>FerNNClassifier.cpp(53): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+     1>FerNNClassifier.cpp(99): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(119): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(158): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+     1>FerNNClassifier.cpp(161): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(163): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>FerNNClassifier.cpp(173): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(175): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>FerNNClassifier.cpp(196): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(203): warning C4018: “<”: 有符号/无符号不匹配
+     1>FerNNClassifier.cpp(216): warning C4018: “<”: 有符号/无符号不匹配
+         LKTracker.cpp
+     1>LKTracker.cpp(15): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>LKTracker.cpp(16): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>LKTracker.cpp(18): warning C4018: “<”: 有符号/无符号不匹配
+     1>LKTracker.cpp(19): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>LKTracker.cpp(31): warning C4018: “<”: 有符号/无符号不匹配
+         run_tld.cpp
+         TLD.cpp
+     1>TLD.cpp(42): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+     1>TLD.cpp(87): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>TLD.cpp(95): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+     1>TLD.cpp(99): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>TLD.cpp(106): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(110): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(117): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(156): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(192): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(204): warning C4244: “参数”: 从“float”转换到“unsigned int”，可能丢失数据
+     1>TLD.cpp(250): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(266): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(373): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+     1>TLD.cpp(373): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+     1>TLD.cpp(396): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+     1>TLD.cpp(404): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>TLD.cpp(405): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>TLD.cpp(429): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(527): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(544): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(553): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(565): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(566): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(567): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(568): warning C4305: “初始化”: 从“double”到“const float”截断
+     1>TLD.cpp(604): warning C4244: “初始化”: 从“const int”转换到“float”，可能丢失数据
+     1>TLD.cpp(605): warning C4244: “初始化”: 从“const int”转换到“float”，可能丢失数据
+     1>TLD.cpp(608): warning C4244: “初始化”: 从“const int”转换到“float”，可能丢失数据
+     1>TLD.cpp(609): warning C4244: “初始化”: 从“const int”转换到“float”，可能丢失数据
+     1>TLD.cpp(615): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(628): warning C4018: “>”: 有符号/无符号不匹配
+     1>TLD.cpp(639): warning C4018: “<”: 有符号/无符号不匹配
+     1>TLD.cpp(762): warning C4018: “<”: 有符号/无符号不匹配
+         tld_utils.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\cTLD.exe" /NOLOGO opencv_calib3d249.lib opencv_contrib249.lib opencv_core249.lib opencv_features2d249.lib opencv_flann249.lib opencv_gpu249.lib opencv_highgui249.lib opencv_imgproc249.lib opencv_legacy249.lib opencv_ml249.lib opencv_nonfree249.lib opencv_objdetect249.lib opencv_ocl249.lib opencv_photo249.lib opencv_stitching249.lib opencv_superres249.lib opencv_ts249.lib opencv_video249.lib opencv_videostab249.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\cTLD.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\cTLD.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\cTLD.lib" /MACHINE:X86 Release\FerNNClassifier.obj
+         Release\LKTracker.obj
+         Release\run_tld.obj
+         Release\TLD.obj
+         Release\tld_utils.obj
+         正在生成代码
+         已完成代码的生成
+         cTLD.vcxproj -> C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\cTLD.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\Release\cTLD.exe;#1" /manifest Release\cTLD.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         正在删除文件“Release\cTLD.unsuccessfulbuild”。
+         正在对“Release\cTLD.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“C:\Users\Administrator\Documents\Visual Studio 2010\Projects\cTLD\cTLD\cTLD.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:15.37
